@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <!--
+    CMU Tartan Pattern
+    Inspired by the Carnegie Mellon University tartan.
+    Colors from CMU brand: Carnegie Red, Blue Thread, Green Thread, Gold Thread, Black.
+  -->
+  <defs>
+    <!-- Vertical stripes -->
+    <pattern id="v" x="0" y="0" width="120" height="1" patternUnits="userSpaceOnUse" patternTransform="scale(1,400)">
+      <!-- Blue base -->
+      <rect x="0"   width="30"  height="1" fill="#043673"/>
+      <!-- Black thin -->
+      <rect x="30"  width="4"   height="1" fill="#0a0a0a"/>
+      <!-- Green -->
+      <rect x="34"  width="22"  height="1" fill="#009647"/>
+      <!-- Black thin -->
+      <rect x="56"  width="4"   height="1" fill="#0a0a0a"/>
+      <!-- Red -->
+      <rect x="60"  width="16"  height="1" fill="#C41230"/>
+      <!-- Black thin -->
+      <rect x="76"  width="4"   height="1" fill="#0a0a0a"/>
+      <!-- Green -->
+      <rect x="80"  width="22"  height="1" fill="#009647"/>
+      <!-- Black thin -->
+      <rect x="102" width="4"   height="1" fill="#0a0a0a"/>
+      <!-- Blue -->
+      <rect x="106" width="14"  height="1" fill="#043673"/>
+    </pattern>
+    <!-- Horizontal stripes -->
+    <pattern id="h" x="0" y="0" width="1" height="120" patternUnits="userSpaceOnUse" patternTransform="scale(400,1)">
+      <rect y="0"   width="1" height="30"  fill="#043673"/>
+      <rect y="30"  width="1" height="4"   fill="#0a0a0a"/>
+      <rect y="34"  width="1" height="22"  fill="#009647"/>
+      <rect y="56"  width="1" height="4"   fill="#0a0a0a"/>
+      <rect y="60"  width="1" height="16"  fill="#C41230"/>
+      <rect y="76"  width="1" height="4"   fill="#0a0a0a"/>
+      <rect y="80"  width="1" height="22"  fill="#009647"/>
+      <rect y="102" width="1" height="4"   fill="#0a0a0a"/>
+      <rect y="106" width="1" height="14"  fill="#043673"/>
+    </pattern>
+    <!-- Gold accent lines (thin) -->
+    <pattern id="gold-v" x="0" y="0" width="120" height="1" patternUnits="userSpaceOnUse" patternTransform="scale(1,400)">
+      <rect x="29"  width="2" height="1" fill="#FDB515" opacity="0.7"/>
+      <rect x="57"  width="2" height="1" fill="#FDB515" opacity="0.7"/>
+      <rect x="77"  width="2" height="1" fill="#FDB515" opacity="0.7"/>
+      <rect x="105" width="2" height="1" fill="#FDB515" opacity="0.7"/>
+    </pattern>
+    <pattern id="gold-h" x="0" y="0" width="1" height="120" patternUnits="userSpaceOnUse" patternTransform="scale(400,1)">
+      <rect y="29"  width="1" height="2" fill="#FDB515" opacity="0.7"/>
+      <rect y="57"  width="1" height="2" fill="#FDB515" opacity="0.7"/>
+      <rect y="77"  width="1" height="2" fill="#FDB515" opacity="0.7"/>
+      <rect y="105" width="1" height="2" fill="#FDB515" opacity="0.7"/>
+    </pattern>
+  </defs>
+  <!-- Layer 1: vertical stripes -->
+  <rect width="400" height="400" fill="url(#v)"/>
+  <!-- Layer 2: horizontal stripes with multiply blend -->
+  <rect width="400" height="400" fill="url(#h)" style="mix-blend-mode:multiply;" opacity="0.85"/>
+  <!-- Layer 3: gold accent vertical -->
+  <rect width="400" height="400" fill="url(#gold-v)" style="mix-blend-mode:screen;"/>
+  <!-- Layer 4: gold accent horizontal -->
+  <rect width="400" height="400" fill="url(#gold-h)" style="mix-blend-mode:screen;"/>
+</svg>

@@ -182,9 +182,9 @@ Based on mood, generate 3 distinct single-slide HTML previews showing typography
 
 | Mood                | Suggested Presets                                          |
 | ------------------- | ---------------------------------------------------------- |
-| Impressed/Confident | Bold Signal, Electric Studio, Dark Botanical, CMU Academic |
+| Impressed/Confident | Bold Signal, Electric Studio, Dark Botanical, CMU Dark     |
 | Excited/Energized   | Creative Voltage, Neon Cyber, Split Pastel                 |
-| Calm/Focused        | Notebook Tabs, Paper & Ink, Swiss Modern                   |
+| Calm/Focused        | Notebook Tabs, Paper & Ink, Swiss Modern, CMU Light        |
 | Inspired/Moved      | Dark Botanical, Vintage Editorial, Pastel Geometry         |
 
 Save previews to `.claude-design/slide-previews/` (style-a.html, style-b.html, style-c.html). Each should be self-contained, ~50-100 lines, showing one animated title slide.

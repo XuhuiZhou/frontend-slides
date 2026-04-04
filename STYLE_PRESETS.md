@@ -298,9 +298,28 @@ Curated visual styles for Frontend Slides. Each preset is inspired by real desig
 
 ---
 
-### 13. CMU Academic
+### 13. CMU Dark
 
-**Vibe:** Authoritative, research-driven, institutional, confident
+**Vibe:** Authoritative, research-driven, bold, confident — for talks, defenses, keynotes
+
+**Title Slide Layout (TWO-COLUMN — mandatory for CMU presets):**
+Left column (60%) has title, subtitle, author, affiliation. Right column (40%) displays a featured image — default to the CMU tartan pattern from `assets/cmu-tartan.svg` if no user image is provided. The image fills the right column with `object-fit: cover` and a subtle rounded corner. A thin Carnegie Red vertical divider separates the columns.
+
+```html
+<!-- Title slide structure -->
+<section class="slide title-slide">
+  <div class="title-left">
+    <img src="cmu-logo.png" alt="CMU" class="title-logo">
+    <div class="title-eyebrow">venue · event</div>
+    <h1 class="title-main">Talk Title</h1>
+    <p class="title-sub">Subtitle</p>
+    <div class="title-meta">name · affiliation · date</div>
+  </div>
+  <div class="title-right">
+    <div class="title-image" style="background-image: url('assets/cmu-tartan.svg')"></div>
+  </div>
+</section>
+```
 
 **Layout:** Dark background with Carnegie Red accent bars. Slide numbers top-left, content centered or two-column.
 
@@ -329,15 +348,72 @@ Curated visual styles for Frontend Slides. Each preset is inspired by real desig
 ```
 
 **Signature Elements:**
+- **Two-column title slide** with tartan image on the right (see layout above)
 - Top accent bar on every slide: `linear-gradient(90deg, Carnegie Red 0% 30%, Blue Thread 100%)`
 - Carnegie Red slide numbers in Source Serif 4
 - Paper cards with left red border for citing works
 - Stat callouts with large Source Serif 4 numbers in Carnegie Red
-- Highlight boxes with red-tinted background and red border
-- Subtle radial gradients using Carnegie Red and Blue Thread for depth
+- Highlight boxes with red-tinted background (`rgba(196,18,48,0.08)`) and red border
+- Subtle radial gradients using Carnegie Red and Blue Thread for depth on title/closing slides
 - **Fragment animations**: bullet points and key elements appear one-by-one on keypress (see SKILL.md fragment rules)
 
-**Brand Reference:** https://brand.cmu.edu/visual-identity — four core colors (Carnegie Red #C41230, Black, Iron Gray #6D6E71, Steel Gray #E0E0E0) plus Tartan and Campus secondary palettes. Only use Open Sans and Source Serif 4 (substitute: Helvetica / Times).
+---
+
+### 14. CMU Light
+
+**Vibe:** Clean, academic, traditional, approachable — for seminars, tutorials, classroom talks
+
+**Title Slide Layout (TWO-COLUMN — mandatory for CMU presets):**
+Same two-column structure as CMU Dark: left column (60%) has title content, right column (40%) displays a featured image. Default to the CMU tartan pattern from `assets/cmu-tartan.svg`. On light theme the image panel has a subtle warm shadow and 12px rounded corners.
+
+```html
+<!-- Same structure as CMU Dark — only colors differ -->
+<section class="slide title-slide">
+  <div class="title-left">...</div>
+  <div class="title-right">
+    <div class="title-image" style="background-image: url('assets/cmu-tartan.svg')"></div>
+  </div>
+</section>
+```
+
+**Layout:** Light cream background with Carnegie Red accents. Clean, generous whitespace. Slide numbers in Iron Gray.
+
+**Typography:**
+- Display: `Source Serif 4` (600/700/900) — official CMU serif
+- Body: `Open Sans` (300/400/500/600) — official CMU sans-serif
+
+**Colors:**
+```css
+:root {
+    --bg-primary: #FAFAF8;
+    --bg-slide: #FFFFFF;
+    --bg-card: #F5F3EE;
+    --text-primary: #1A1A1A;
+    --text-secondary: #555555;
+    --carnegie-red: #C41230;
+    --iron-gray: #6D6E71;
+    --steel-gray: #E0E0E0;
+    --blue-thread: #043673;
+    --highlands-blue: #007BC0;
+    --gold-thread: #FDB515;
+    --green-thread: #009647;
+    --teal-thread: #008F91;
+    --kittanning-beige: #E4DAC4;
+    --machinery-tan: #BCB49E;
+}
+```
+
+**Signature Elements:**
+- **Two-column title slide** with tartan image on the right (see layout above)
+- Thin Carnegie Red top accent bar on every slide (3px solid, no gradient)
+- Slide numbers in Iron Gray (#6D6E71)
+- Content cards with cream background (`#F5F3EE`), subtle shadow, and left red border
+- Stat callouts in Carnegie Red with light warm background
+- Highlight boxes with warm beige background (`#E4DAC4` at 30% opacity) and red left border
+- Generous padding and whitespace — the "academic paper" feel
+- **Fragment animations**: bullet points and key elements appear one-by-one on keypress (see SKILL.md fragment rules)
+
+**Brand Reference (both CMU presets):** https://brand.cmu.edu/visual-identity — four core colors (Carnegie Red #C41230, Black, Iron Gray #6D6E71, Steel Gray #E0E0E0) plus Tartan and Campus secondary palettes. Only use Open Sans and Source Serif 4 (substitute: Helvetica / Times). Default tartan image: [assets/cmu-tartan.svg](assets/cmu-tartan.svg).
 
 ---
 
@@ -355,7 +431,8 @@ Curated visual styles for Frontend Slides. Each preset is inspired by real desig
 | Vintage Editorial | Fraunces | Work Sans | Google |
 | Neon Cyber | Clash Display | Satoshi | Fontshare |
 | Terminal Green | JetBrains Mono | JetBrains Mono | JetBrains |
-| CMU Academic | Source Serif 4 | Open Sans | Google |
+| CMU Dark | Source Serif 4 | Open Sans | Google |
+| CMU Light | Source Serif 4 | Open Sans | Google |
 
 ---
 
