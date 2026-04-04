@@ -61,6 +61,35 @@ These invariants apply to EVERY slide in EVERY presentation:
 
 **Content exceeds limits? Split into multiple slides. Never cram, never scroll.**
 
+### Fragment (Step-Through) Animations
+
+Bullet points, cards, and key elements MUST appear one-by-one on keypress, not all at once. This is **mandatory for all presentations**.
+
+**CSS:**
+```css
+.fragment {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.5s var(--ease-out-expo),
+                transform 0.5s var(--ease-out-expo);
+}
+.fragment.shown {
+    opacity: 1;
+    transform: translateY(0);
+}
+```
+
+**How to apply:**
+- Individual `<li>` elements in bullet lists: `<li class="fragment">`
+- Cards, pills, grid items: `<div class="card fragment">`
+- Highlight boxes and callouts at the bottom of a slide: `<div class="highlight-box fragment">`
+- Do NOT fragment slide titles or section numbers — those should use `class="reveal"` (appear on slide enter)
+
+**JS — FragmentController class (include in every presentation):**
+The `SlidePresentation` class handles normal slide navigation. The `FragmentController` overrides keyboard/touch events so that forward navigation (arrow right, space) reveals the next `.fragment` on the current slide before advancing. Backward navigation (arrow left) hides the last shown fragment before going to the previous slide. When navigating backward to a previous slide, all its fragments should be pre-revealed (shown state).
+
+**Rule of thumb:** If a slide has 3+ items that the speaker would talk through sequentially, they should be fragments. Charts, diagrams, and images that form a single visual unit should NOT be fragmented.
+
 ---
 
 ## Phase 0: Detect Mode
@@ -151,12 +180,12 @@ What feeling should the audience have? Options:
 
 Based on mood, generate 3 distinct single-slide HTML previews showing typography, colors, animation, and overall aesthetic. Read [STYLE_PRESETS.md](STYLE_PRESETS.md) for available presets and their specifications.
 
-| Mood                | Suggested Presets                                  |
-| ------------------- | -------------------------------------------------- |
-| Impressed/Confident | Bold Signal, Electric Studio, Dark Botanical       |
-| Excited/Energized   | Creative Voltage, Neon Cyber, Split Pastel         |
-| Calm/Focused        | Notebook Tabs, Paper & Ink, Swiss Modern           |
-| Inspired/Moved      | Dark Botanical, Vintage Editorial, Pastel Geometry |
+| Mood                | Suggested Presets                                          |
+| ------------------- | ---------------------------------------------------------- |
+| Impressed/Confident | Bold Signal, Electric Studio, Dark Botanical, CMU Academic |
+| Excited/Energized   | Creative Voltage, Neon Cyber, Split Pastel                 |
+| Calm/Focused        | Notebook Tabs, Paper & Ink, Swiss Modern                   |
+| Inspired/Moved      | Dark Botanical, Vintage Editorial, Pastel Geometry         |
 
 Save previews to `.claude-design/slide-previews/` (style-a.html, style-b.html, style-c.html). Each should be self-contained, ~50-100 lines, showing one animated title slide.
 

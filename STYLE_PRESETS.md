@@ -298,6 +298,49 @@ Curated visual styles for Frontend Slides. Each preset is inspired by real desig
 
 ---
 
+### 13. CMU Academic
+
+**Vibe:** Authoritative, research-driven, institutional, confident
+
+**Layout:** Dark background with Carnegie Red accent bars. Slide numbers top-left, content centered or two-column.
+
+**Typography:**
+- Display: `Source Serif 4` (600/700/900) — official CMU serif
+- Body: `Open Sans` (300/400/500/600) — official CMU sans-serif
+
+**Colors:**
+```css
+:root {
+    --bg-primary: #0C0C0C;
+    --bg-slide: #111111;
+    --bg-card: #1A1A1A;
+    --text-primary: #F2F0ED;
+    --text-secondary: #9A9A9A;
+    --carnegie-red: #C41230;
+    --iron-gray: #6D6E71;
+    --steel-gray: #E0E0E0;
+    --blue-thread: #043673;
+    --highlands-blue: #007BC0;
+    --gold-thread: #FDB515;
+    --green-thread: #009647;
+    --teal-thread: #008F91;
+    --weaver-blue: #182C4B;
+}
+```
+
+**Signature Elements:**
+- Top accent bar on every slide: `linear-gradient(90deg, Carnegie Red 0% 30%, Blue Thread 100%)`
+- Carnegie Red slide numbers in Source Serif 4
+- Paper cards with left red border for citing works
+- Stat callouts with large Source Serif 4 numbers in Carnegie Red
+- Highlight boxes with red-tinted background and red border
+- Subtle radial gradients using Carnegie Red and Blue Thread for depth
+- **Fragment animations**: bullet points and key elements appear one-by-one on keypress (see SKILL.md fragment rules)
+
+**Brand Reference:** https://brand.cmu.edu/visual-identity — four core colors (Carnegie Red #C41230, Black, Iron Gray #6D6E71, Steel Gray #E0E0E0) plus Tartan and Campus secondary palettes. Only use Open Sans and Source Serif 4 (substitute: Helvetica / Times).
+
+---
+
 ## Font Pairing Quick Reference
 
 | Preset | Display Font | Body Font | Source |
@@ -312,6 +355,7 @@ Curated visual styles for Frontend Slides. Each preset is inspired by real desig
 | Vintage Editorial | Fraunces | Work Sans | Google |
 | Neon Cyber | Clash Display | Satoshi | Fontshare |
 | Terminal Green | JetBrains Mono | JetBrains Mono | JetBrains |
+| CMU Academic | Source Serif 4 | Open Sans | Google |
 
 ---
 
