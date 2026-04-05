@@ -252,6 +252,214 @@ document.addEventListener('keydown', (e) => {
 });
 ```
 
+## Presenter Mode
+
+Every presentation MUST include presenter mode. Press `Cmd+P` (Mac) / `Ctrl+P` (Windows) to open the presenter window. Press `Cmd+F` / `Ctrl+F` to toggle fullscreen on the audience window.
+
+**How it works:** Two browser windows viewing the same HTML file, synced via `BroadcastChannel`. No server needed.
+
+- **Audience window**: fullscreen via Fullscreen API, shows current slide only
+- **Presenter window**: shows current slide (small), next slide preview, speaker notes, timer, slide count
+
+### Speaker Notes
+
+Add notes to slides via `data-notes` attribute:
+
+```html
+<section class="slide" data-notes="Mention the 74% improvement here. Pause for questions.">
+```
+
+### Presenter Mode Implementation
+
+Include this in every presentation:
+
+```javascript
+/* ===========================================
+   PRESENTER MODE
+   Cmd+P: open presenter view
+   Cmd+F: toggle fullscreen (audience)
+   =========================================== */
+class PresenterMode {
+    constructor(presentation) {
+        this.pres = presentation;
+        this.channel = new BroadcastChannel('slide-sync');
+        this.role = new URLSearchParams(location.search).get('mode');
+        this.startTime = null;
+
+        // Listen for sync messages from the other window
+        this.channel.onmessage = (e) => {
+            if (e.data.type === 'navigate') {
+                this.pres.goToSlide(e.data.slide);
+            }
+        };
+
+        // Override navigation to broadcast
+        const origGoTo = this.pres.goToSlide.bind(this.pres);
+        this.pres.goToSlide = (idx) => {
+            origGoTo(idx);
+            this.channel.postMessage({ type: 'navigate', slide: idx });
+            if (this.role === 'presenter') this.updatePresenterView();
+        };
+
+        // Keyboard shortcuts (Cmd/Ctrl)
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'p') {
+                e.preventDefault();
+                this.openPresenterView();
+            }
+            if ((e.metaKey || e.ctrlKey) && e.key === 'f') {
+                e.preventDefault();
+                this.toggleFullscreen();
+            }
+        });
+
+        // If opened as presenter, render that layout
+        if (this.role === 'presenter') this.renderPresenterLayout();
+    }
+
+    openPresenterView() {
+        // Open a new window with presenter mode
+        const url = location.pathname + '?mode=presenter';
+        window.open(url, 'presenter', 'width=1200,height=800');
+    }
+
+    toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
+    renderPresenterLayout() {
+        // Hide normal slide view, build presenter UI
+        document.body.innerHTML = '';
+        document.body.style.cssText = 'margin:0;background:#1a1a1a;color:#fff;font-family:system-ui;overflow:hidden;';
+
+        document.body.innerHTML = `
+            <div style="display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr auto;height:100vh;gap:8px;padding:8px;">
+                <div style="position:relative;background:#000;border-radius:8px;overflow:hidden;">
+                    <iframe id="currentSlide" style="width:100%;height:100%;border:none;pointer-events:none;"></iframe>
+                    <div style="position:absolute;bottom:8px;left:12px;font-size:14px;opacity:0.6;">Current Slide</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                    <div style="flex:1;position:relative;background:#000;border-radius:8px;overflow:hidden;">
+                        <iframe id="nextSlide" style="width:100%;height:100%;border:none;pointer-events:none;"></iframe>
+                        <div style="position:absolute;bottom:8px;left:12px;font-size:13px;opacity:0.6;">Next Slide</div>
+                    </div>
+                    <div id="notesPanel" style="flex:1;background:#2a2a2a;border-radius:8px;padding:16px;overflow-y:auto;font-size:15px;line-height:1.6;color:#ddd;">
+                        <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:#888;margin-bottom:8px;">Speaker Notes</div>
+                        <div id="notesContent">No notes for this slide.</div>
+                    </div>
+                </div>
+                <div style="grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:#2a2a2a;border-radius:8px;">
+                    <div id="slideCounter" style="font-size:18px;font-weight:600;">1 / ?</div>
+                    <div id="timer" style="font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;">00:00</div>
+                    <div style="display:flex;gap:12px;">
+                        <button onclick="presenterNav(-1)" style="padding:6px 16px;border:1px solid #555;background:none;color:#fff;border-radius:4px;cursor:pointer;">← Prev</button>
+                        <button onclick="presenterNav(1)" style="padding:6px 16px;border:1px solid #555;background:none;color:#fff;border-radius:4px;cursor:pointer;">Next →</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Load current and next slide iframes
+        const base = location.pathname;
+        this.currentFrame = document.getElementById('currentSlide');
+        this.nextFrame = document.getElementById('nextSlide');
+        this.currentFrame.src = base + '?mode=slide&n=0';
+        this.nextFrame.src = base + '?mode=slide&n=1';
+
+        // Start timer
+        this.startTime = Date.now();
+        setInterval(() => {
+            const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+            const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
+            const s = String(elapsed % 60).padStart(2, '0');
+            document.getElementById('timer').textContent = `${m}:${s}`;
+        }, 1000);
+
+        // Navigation function
+        window.presenterNav = (dir) => {
+            const newSlide = this.pres.currentSlide + dir;
+            if (newSlide >= 0 && newSlide < this.pres.slides.length) {
+                this.pres.currentSlide = newSlide;
+                this.channel.postMessage({ type: 'navigate', slide: newSlide });
+                this.updatePresenterView();
+            }
+        };
+
+        // Keyboard nav in presenter window
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); presenterNav(1); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); presenterNav(-1); }
+        });
+
+        this.updatePresenterView();
+    }
+
+    updatePresenterView() {
+        const n = this.pres.currentSlide;
+        const total = this.pres.slides.length;
+        const base = location.pathname;
+
+        if (this.currentFrame) this.currentFrame.src = base + `?mode=slide&n=${n}`;
+        if (this.nextFrame) this.nextFrame.src = base + `?mode=slide&n=${Math.min(n + 1, total - 1)}`;
+
+        const counter = document.getElementById('slideCounter');
+        if (counter) counter.textContent = `${n + 1} / ${total}`;
+
+        // Update notes from the original HTML's data-notes attributes
+        // We need to fetch them since we rebuilt the DOM
+        const notesEl = document.getElementById('notesContent');
+        if (notesEl) {
+            // Fetch notes from the slide iframe once loaded
+            this.currentFrame.onload = () => {
+                try {
+                    const slideEl = this.currentFrame.contentDocument.querySelectorAll('.slide')[0];
+                    const notes = slideEl?.getAttribute('data-notes') || 'No notes for this slide.';
+                    notesEl.textContent = notes;
+                } catch(e) { notesEl.textContent = 'No notes for this slide.'; }
+            };
+        }
+    }
+}
+
+// Single-slide mode: when opened as ?mode=slide&n=X, show only that slide
+if (new URLSearchParams(location.search).get('mode') === 'slide') {
+    const n = parseInt(new URLSearchParams(location.search).get('n') || '0');
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.slide').forEach((s, i) => {
+            s.style.display = i === n ? '' : 'none';
+            if (i === n) s.classList.add('visible');
+        });
+        // Hide nav dots, progress bar
+        document.querySelectorAll('.nav-dots, .progress-bar, .edit-hotzone, .edit-toggle').forEach(
+            el => el.style.display = 'none'
+        );
+    });
+}
+```
+
+**Integration:** After instantiating `SlidePresentation`, create the presenter mode:
+
+```javascript
+const presentation = new SlidePresentation();
+const presenter = new PresenterMode(presentation);
+```
+
+### Keyboard Shortcuts Summary
+
+| Shortcut | Action |
+|----------|--------|
+| `Cmd+P` / `Ctrl+P` | Open presenter view in new window |
+| `Cmd+F` / `Ctrl+F` | Toggle fullscreen (audience window) |
+| `Arrow keys / Space` | Navigate slides (synced across windows) |
+| `E` | Toggle edit mode (if enabled) |
+| `Escape` | Exit fullscreen |
+
+---
+
 ## Image Pipeline (Skip If No Images)
 
 If user chose "No images" in Phase 1, skip this entirely. If images were provided, process them before generating HTML.
