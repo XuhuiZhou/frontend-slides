@@ -144,6 +144,40 @@ A clean citation card with venue, title, and authors.
 - Background should use `bg-primary` for visual separation
 - No other content on this slide — just the citation card, centered
 
+### Extracting Figures from Papers
+
+When a presentation references an academic paper and needs its figures (architecture diagrams, benchmark overviews, result tables), extract them from the paper PDF rather than recreating them. This ensures accuracy and saves time.
+
+**Extraction process:**
+1. Download the paper PDF (e.g., `curl -sL "https://arxiv.org/pdf/XXXX.XXXXX" -o paper.pdf`)
+2. Use PyMuPDF (`fitz`) to render the target page at **4x zoom** (~288 DPI) for retina-quality output
+3. Crop tightly to just the figure — remove paper headers, page numbers, and caption text
+4. Save as PNG with `optimize=True`
+
+```python
+import fitz
+from PIL import Image
+
+doc = fitz.open('paper.pdf')
+page = doc[page_number]  # 0-indexed
+mat = fitz.Matrix(4, 4)  # 4x zoom = ~288 DPI
+pix = page.get_pixmap(matrix=mat, clip=fitz.Rect(x0, y0, x1, y1))
+pix.save('/tmp/figure-raw.png')
+
+# Crop with Pillow to remove headers/captions
+img = Image.open('/tmp/figure-raw.png')
+cropped = img.crop((left, top, right, bottom))
+cropped.save('output.png', 'PNG', optimize=True)
+```
+
+**Quality rules:**
+- Minimum **2x retina resolution** — if the figure displays at 800px wide, the image must be at least 1600px wide
+- Target **4x zoom** from PDF for best results (~288 DPI). Never go below 3x.
+- Final file size should be under 300KB per figure. If larger, the figure is too complex for a slide — simplify or split.
+- Always crop tightly: no paper headers, no page numbers, no caption text (the slide provides its own title and context)
+- Add a white background padding (`background: #fff; padding: clamp(8px, 1vh, 14px)`) when displaying on non-white slide backgrounds
+- Use `border-radius`, `border`, and `box-shadow` for polished presentation: `border-radius: clamp(6px, 0.8vw, 10px); border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 2px 12px rgba(0,0,0,0.05)`
+
 ---
 
 ## Phase 0: Detect Mode
