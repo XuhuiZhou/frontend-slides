@@ -90,19 +90,41 @@ The `SlidePresentation` class handles normal slide navigation. The `FragmentCont
 
 **Rule of thumb:** If a slide has 3+ items that the speaker would talk through sequentially, they should be fragments. Charts, diagrams, and images that form a single visual unit should NOT be fragmented.
 
-### Paper Section Title Cards
+### Section Transitions & Paper Title Cards
 
-When a presentation covers multiple papers or research works, each paper MUST have a dedicated section title card slide before its content slides. This is **mandatory for conference talks and research presentations**.
+When a presentation covers multiple papers or research works, each paper section MUST be preceded by **two slides**: a **transition/motivation slide** and a **paper title card**. These are separate slides — never combine them. This is **mandatory for conference talks and research presentations**.
 
-**Structure:**
+#### Slide 1: Transition / Motivation Slide
+
+A full-viewport slide with a single compelling question, insight, or tension that bridges from the previous section. This is a "breathing" moment — no bullet points, no charts.
+
 ```html
 <section class="slide content-slide" style="background:var(--bg-primary);">
   <div class="slide-content" style="align-items:center;justify-content:center;text-align:center;">
     <span class="slide-number reveal">##</span>
-    <!-- Optional: one-line transition framing above the card -->
-    <p class="slide-body reveal" style="max-width:700px;text-align:center;margin-bottom:...;">
-      Transition sentence connecting from the previous section...
-    </p>
+    <div class="quote-text reveal" style="max-width:min(80vw,700px);border-left:none;text-align:center;padding-left:0;">
+      The motivating question or tension that bridges sections...
+    </div>
+  </div>
+</section>
+```
+
+**Rules for transition slides:**
+- Use `quote-text` styling for the text — large, elegant serif, italic
+- Remove the default left border (`border-left: none`) and center the text (`text-align: center; padding-left: 0`)
+- Maximum 1–2 sentences. This is a moment for the audience to pause and think.
+- The text should articulate a **gap** left by the previous section that the next paper fills. Frame it as a question or an unresolved tension.
+- Background should use `bg-primary` for visual separation from content slides
+- No bullet points, no charts, no highlight boxes — just the text, beautifully displayed
+
+#### Slide 2: Paper Title Card
+
+A clean citation card with venue, title, and authors.
+
+```html
+<section class="slide content-slide" style="background:var(--bg-primary);">
+  <div class="slide-content" style="align-items:center;justify-content:center;text-align:center;">
+    <span class="slide-number reveal">##</span>
     <div class="paper-card reveal" style="max-width:min(85vw,700px);border-left-width:4px;text-align:left;">
       <div class="paper-venue">VENUE YEAR</div>
       <div class="paper-title" style="font-size:var(--h2-size);">Full Paper Title</div>
@@ -114,13 +136,13 @@ When a presentation covers multiple papers or research works, each paper MUST ha
 </section>
 ```
 
-**Rules:**
+**Rules for paper title cards:**
 - The card uses `paper-card` styling with a thick left border (`border-left-width: 4px`)
 - Venue badge in `paper-venue` (e.g., "ICLR 2026", "arXiv 2025")
 - Full paper title in `paper-title` at `h2-size`
 - Authors in `paper-desc` — bold the presenting author's name with `<strong>`
-- Optional transition text above the card to bridge from the previous section's conclusion to this paper's motivation
-- Background should use `bg-primary` (slightly different from content slides) for visual separation
+- Background should use `bg-primary` for visual separation
+- No other content on this slide — just the citation card, centered
 
 ---
 
