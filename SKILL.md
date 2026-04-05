@@ -90,6 +90,38 @@ The `SlidePresentation` class handles normal slide navigation. The `FragmentCont
 
 **Rule of thumb:** If a slide has 3+ items that the speaker would talk through sequentially, they should be fragments. Charts, diagrams, and images that form a single visual unit should NOT be fragmented.
 
+### Paper Section Title Cards
+
+When a presentation covers multiple papers or research works, each paper MUST have a dedicated section title card slide before its content slides. This is **mandatory for conference talks and research presentations**.
+
+**Structure:**
+```html
+<section class="slide content-slide" style="background:var(--bg-primary);">
+  <div class="slide-content" style="align-items:center;justify-content:center;text-align:center;">
+    <span class="slide-number reveal">##</span>
+    <!-- Optional: one-line transition framing above the card -->
+    <p class="slide-body reveal" style="max-width:700px;text-align:center;margin-bottom:...;">
+      Transition sentence connecting from the previous section...
+    </p>
+    <div class="paper-card reveal" style="max-width:min(85vw,700px);border-left-width:4px;text-align:left;">
+      <div class="paper-venue">VENUE YEAR</div>
+      <div class="paper-title" style="font-size:var(--h2-size);">Full Paper Title</div>
+      <div class="paper-desc" style="margin-top:...;">
+        Author One, <strong>Highlighted Author</strong>, Author Three, ...
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+**Rules:**
+- The card uses `paper-card` styling with a thick left border (`border-left-width: 4px`)
+- Venue badge in `paper-venue` (e.g., "ICLR 2026", "arXiv 2025")
+- Full paper title in `paper-title` at `h2-size`
+- Authors in `paper-desc` — bold the presenting author's name with `<strong>`
+- Optional transition text above the card to bridge from the previous section's conclusion to this paper's motivation
+- Background should use `bg-primary` (slightly different from content slides) for visual separation
+
 ---
 
 ## Phase 0: Detect Mode
